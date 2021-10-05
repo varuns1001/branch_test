@@ -1,0 +1,274 @@
+loc:
+  inbound_layer_basedir: dbfs:/mnt/ev/workspace/tigeranalytics/cmi_human_forecasts/inbound
+  staging_layer_basedir: dbfs:/mnt/ev/workspace/tigeranalytics/cmi_human_forecasts/staging
+  solutions_layer_basedir: dbfs:/mnt/ev/workspace/tigeranalytics/cmi_human_forecasts/solutions
+  apps_layer_basedir: dbfs:/mnt/ev/workspace/tigeranalytics/cmi_human_forecasts/app
+  log_dir: logs
+  run_date: 20210921
+
+data_merge:
+  signals_basedir: dbfs:/mnt/pr/inbound/cmi/signals
+  
+  master_taxonomy:
+    file_path: dbfs:/mnt/ev/workspace/tigeranalytics/et_refresh_optimization/Master_Taxonomy.csv
+
+    included_categories:
+      - GEN 1
+      - GEN 2
+
+    catalog_theme_columns: [
+      Benefit,
+      Feature,
+      Flavor,
+      Ingredient,
+      Nutrient,
+      Taste,
+      Texture,
+      Purina's Values
+    ]
+
+  food_segments:
+    - Baby_Food
+    - Breakfast_Cereal
+    - Chocolate
+    - Dairy_Alternatives
+    - Dry_Food
+    - Meat_Poultry_Seafood
+    - Meat_Substitutes
+    - Sauces_Dressings_Dips_Condiments
+    - Stocks_Broths
+    - Sweet_Savory_Snacks
+
+  catalogs:
+    default_repartition_value: 200
+    available_catalogs:
+      - review
+      - sales
+      - patent
+      - product
+      - kol
+      
+    available_catalog_details:
+      review:
+        file_pattern: Review
+        columns: [
+          Review_ID,
+          OnlineStatement_ID,
+          Channel,
+          Source Product Identifier,
+          Review Date,
+          Benefit,
+          Feature,
+          Flavor,
+          Ingredient,
+          Nutrient,
+          Taste,
+          Texture,
+          Purina's Values
+        ]
+        
+        date_cols: [
+          Review Date
+        ]
+        
+        composite_keys: [
+          Review_ID,
+          OnlineStatement_ID,
+          Channel,
+          Source Product Identifier,
+          Review Date
+        ]
+        
+      sales:
+        file_pattern: Sales
+        file_priorities: {
+          'dbfs:/mnt/pr/inbound/cmi/signals/Baby_Food/Baby Food_May-2021/finalized_L2_-_FoodBook_6_-_Infant_Nutrition_SKUSales_May_2021.csv': 2,
+          'dbfs:/mnt/pr/inbound/cmi/signals/Baby_Food/Baby Food_July-2021/finalized_L2_-_FoodBook_6_-_Infant_Nutrition_SKUSales_July_2021.csv': 1,
+          'dbfs:/mnt/pr/inbound/cmi/signals/Breakfast_Cereal/Breakfast_Cereal_May Sales Corrected-2021/finalized_L2_-_Baking_Bakery_Snacks_SKUSales_May_2021_Corrected.csv': 2,
+          'dbfs:/mnt/pr/inbound/cmi/signals/Breakfast_Cereal/Breakfast_Cereal_July-2021/finalized_L2_-_Baking_Bakery_Snacks_SKUSales_July_2021.csv': 1,
+          'dbfs:/mnt/pr/inbound/cmi/signals/Chocolate/Chocolate_May-2021/finalized_L2_-_Chapter_5_Chocolate_SKUSales_May_2021.csv': 2,
+          'dbfs:/mnt/pr/inbound/cmi/signals/Chocolate/Chocolate_July-2021/finalized_L2_-_Chapter_5_Chocolate_SKUSales_July_2021.csv': 1,
+          'dbfs:/mnt/pr/inbound/cmi/signals/Dairy_Alternatives/Dairy_Alternatives_Mayl-2021/finalized_L2_-_Chapter_5_Dairy_Alternatives_SKUSales_May_2021.csv': 2,
+          'dbfs:/mnt/pr/inbound/cmi/signals/Dairy_Alternatives/Dairy_Alternatives_July-2021/finalized_L2_-_Chapter_5_Dairy_Alternatives_SKUSales_July_2021.csv': 1,
+          'dbfs:/mnt/pr/inbound/cmi/signals/Dry_Food/Dry_Food_May-2021/finalized_L2_-_Chapter_5_Dry_Food_SKUSales_May_2021.csv': 2,
+          'dbfs:/mnt/pr/inbound/cmi/signals/Dry_Food/Dry_Food_July-2021/finalized_L2_-_Chapter_5_Dry_Food_SKUSales_July_2021.csv': 1,
+          'dbfs:/mnt/pr/inbound/cmi/signals/Meat_Poultry_Seafood/Meat_Poultry_Seafood_May-2021/finalized_L2_-_Meat_and_Meat_Substitutes_SKUSales_May_2021.csv': 2,
+          'dbfs:/mnt/pr/inbound/cmi/signals/Meat_Poultry_Seafood/Meat_Poultry_Seafood_July-2021/finalized_L2_-_Meat_and_Meat_Substitutes_SKUSales_July_2021.csv': 1,
+          'dbfs:/mnt/pr/inbound/cmi/signals/Meat_Substitutes/Meat_Substitutes_May-2021/finalized_L2_-_Meat_and_Meat_Substitutes_SKUSales_May_2021.csv': 2,
+          'dbfs:/mnt/pr/inbound/cmi/signals/Meat_Substitutes/Meat_Substitutes_July-2021/finalized_L2_-_Meat_and_Meat_Substitutes_SKUSales_July_2021.csv': 1,
+          'dbfs:/mnt/pr/inbound/cmi/signals/Sauces_Dressings_Dips_Condiments/Sauces_Dressings_Dips_Condiments_May Sales Corrected-2021/finalized_L2_-_FoodBook_Condiments_Spreads_and_Sauces_SKUSales_May_2021_Corrected.csv': 2,
+          'dbfs:/mnt/pr/inbound/cmi/signals/Sauces_Dressings_Dips_Condiments/Sauces_Dressings_Dips_Condiments_July-2021/finalized_L2_-_FoodBook_Condiments_Spreads_and_Sauces_SKUSales_July_2021.csv': 1,
+          'dbfs:/mnt/pr/inbound/cmi/signals/Stocks_Broths/Stocks_Broths_May Sales Corrected-2021/finalized_L2_-_FoodBook_Condiments_Spreads_and_Sauces_SKUSales_May_2021_Corrected.csv': 2,
+          'dbfs:/mnt/pr/inbound/cmi/signals/Stocks_Broths/Stocks_Broths_July-2021/finalized_L2_-_FoodBook_Condiments_Spreads_and_Sauces_SKUSales_July_2021.csv': 1,
+          'dbfs:/mnt/pr/inbound/cmi/signals/Sweet_Savory_Snacks/Sweet_Savory_Snacks_May-2021/finalized_L2_-_Chapter_5_Sweet_Savory_Snacks_SKUSales_May_2021.csv': 2,
+          'dbfs:/mnt/pr/inbound/cmi/signals/Sweet_Savory_Snacks/Sweet_Savory_Snacks_July-2021/finalized_L2_-_Chapter_5_Sweet_Savory_Snacks_SKUSales_July_2021.csv': 1
+        }
+
+        files_to_include: [
+          dbfs:/mnt/pr/inbound/cmi/signals/Baby_Food/Baby Food_May-2021/finalized_L2_-_FoodBook_6_-_Infant_Nutrition_SKUSales_May_2021.csv,
+          dbfs:/mnt/pr/inbound/cmi/signals/Baby_Food/Baby Food_July-2021/finalized_L2_-_FoodBook_6_-_Infant_Nutrition_SKUSales_July_2021.csv,
+          dbfs:/mnt/pr/inbound/cmi/signals/Breakfast_Cereal/Breakfast_Cereal_May Sales Corrected-2021/finalized_L2_-_Baking_Bakery_Snacks_SKUSales_May_2021_Corrected.csv,
+          dbfs:/mnt/pr/inbound/cmi/signals/Breakfast_Cereal/Breakfast_Cereal_July-2021/finalized_L2_-_Baking_Bakery_Snacks_SKUSales_July_2021.csv,
+          dbfs:/mnt/pr/inbound/cmi/signals/Chocolate/Chocolate_May-2021/finalized_L2_-_Chapter_5_Chocolate_SKUSales_May_2021.csv,
+          dbfs:/mnt/pr/inbound/cmi/signals/Chocolate/Chocolate_July-2021/finalized_L2_-_Chapter_5_Chocolate_SKUSales_July_2021.csv,
+          dbfs:/mnt/pr/inbound/cmi/signals/Dairy_Alternatives/Dairy_Alternatives_Mayl-2021/finalized_L2_-_Chapter_5_Dairy_Alternatives_SKUSales_May_2021.csv,
+          dbfs:/mnt/pr/inbound/cmi/signals/Dairy_Alternatives/Dairy_Alternatives_July-2021/finalized_L2_-_Chapter_5_Dairy_Alternatives_SKUSales_July_2021.csv,
+          dbfs:/mnt/pr/inbound/cmi/signals/Dry_Food/Dry_Food_May-2021/finalized_L2_-_Chapter_5_Dry_Food_SKUSales_May_2021.csv,
+          dbfs:/mnt/pr/inbound/cmi/signals/Dry_Food/Dry_Food_July-2021/finalized_L2_-_Chapter_5_Dry_Food_SKUSales_July_2021.csv,
+          dbfs:/mnt/pr/inbound/cmi/signals/Meat_Poultry_Seafood/Meat_Poultry_Seafood_May-2021/finalized_L2_-_Meat_and_Meat_Substitutes_SKUSales_May_2021.csv,
+          dbfs:/mnt/pr/inbound/cmi/signals/Meat_Poultry_Seafood/Meat_Poultry_Seafood_July-2021/finalized_L2_-_Meat_and_Meat_Substitutes_SKUSales_July_2021.csv,
+          dbfs:/mnt/pr/inbound/cmi/signals/Meat_Substitutes/Meat_Substitutes_May-2021/finalized_L2_-_Meat_and_Meat_Substitutes_SKUSales_May_2021.csv,
+          dbfs:/mnt/pr/inbound/cmi/signals/Meat_Substitutes/Meat_Substitutes_July-2021/finalized_L2_-_Meat_and_Meat_Substitutes_SKUSales_July_2021.csv,
+          dbfs:/mnt/pr/inbound/cmi/signals/Sauces_Dressings_Dips_Condiments/Sauces_Dressings_Dips_Condiments_May Sales Corrected-2021/finalized_L2_-_FoodBook_Condiments_Spreads_and_Sauces_SKUSales_May_2021_Corrected.csv,
+          dbfs:/mnt/pr/inbound/cmi/signals/Sauces_Dressings_Dips_Condiments/Sauces_Dressings_Dips_Condiments_July-2021/finalized_L2_-_FoodBook_Condiments_Spreads_and_Sauces_SKUSales_July_2021.csv,
+          dbfs:/mnt/pr/inbound/cmi/signals/Stocks_Broths/Stocks_Broths_May Sales Corrected-2021/finalized_L2_-_FoodBook_Condiments_Spreads_and_Sauces_SKUSales_May_2021_Corrected.csv,
+          dbfs:/mnt/pr/inbound/cmi/signals/Stocks_Broths/Stocks_Broths_July-2021/finalized_L2_-_FoodBook_Condiments_Spreads_and_Sauces_SKUSales_July_2021.csv,
+          dbfs:/mnt/pr/inbound/cmi/signals/Sweet_Savory_Snacks/Sweet_Savory_Snacks_May-2021/finalized_L2_-_Chapter_5_Sweet_Savory_Snacks_SKUSales_May_2021.csv,
+          dbfs:/mnt/pr/inbound/cmi/signals/Sweet_Savory_Snacks/Sweet_Savory_Snacks_July-2021/finalized_L2_-_Chapter_5_Sweet_Savory_Snacks_SKUSales_July_2021.csv
+        ]
+      
+        columns: [
+          Associated E-Commerce Sales,
+          Source Product Identifier,
+          UPC,
+          Date,
+          Sales Value,
+          Benefit,
+          Feature,
+          Flavor,
+          Ingredient,
+          Nutrient,
+          Taste,
+          Texture,
+          Purina's Values
+        ]
+        
+        date_cols: [
+          Date
+        ]
+        
+        composite_keys: [
+         Associated E-Commerce Sales,
+         Source Product Identifier,
+         UPC,
+         Date
+       ]
+        
+      patent:
+        file_pattern: Patent
+        columns: [
+          Patent_ID,
+          Publication Number,
+          Publication Date,
+          Benefit,
+          Feature,
+          Flavor,
+          Ingredient,
+          Nutrient,
+          Taste,
+          Texture,
+          Purina's Values
+        ]
+        
+        date_cols: [
+          Publication Date
+        ]
+        
+        composite_keys: [
+          Patent_ID,
+          Publication Number,
+          Publication Date
+        ]
+        
+      product:
+        file_pattern: Product
+        columns: [
+          Source Product Identifier,
+          Product Name,
+          First Appearance,
+          Brand,
+          Benefit,
+          Feature,
+          Flavor,
+          Ingredient,
+          Nutrient,
+          Taste,
+          Texture,
+          Purina's Values
+        ]
+        
+        date_cols: [
+          First Appearance
+        ]
+        
+        composite_keys: [
+          Source Product Identifier,
+          Product Name,
+          First Appearance,
+          Brand
+        ]
+      
+      kol:
+        file_pattern: KOL
+        columns: [
+          KOLOnlinePost_ID,
+          KOLOnlineStatement_ID,
+          Channel,
+          KOL Name,
+          Post Date,
+          Benefit,
+          Feature,
+          Flavor,
+          Ingredient,
+          Nutrient,
+          Taste,
+          Texture,
+          Purina's Values
+        ]
+        
+        date_cols: [
+          Post Date
+        ]
+        
+        composite_keys: [
+          KOLOnlinePost_ID,
+          KOLOnlineStatement_ID,
+          Channel,
+          KOL Name,
+          Post Date
+        ]
+      
+      social:
+        repartition_value: 1500
+        file_pattern: Social
+        columns: [
+          Post_ID,
+          OnlineStatement_ID,
+          Channel,
+          Post Date,
+          Benefit,
+          Feature,
+          Flavor,
+          Ingredient,
+          Nutrient,
+          Taste,
+          Texture,
+          Purina's Values
+        ]
+        
+        date_cols: [
+          Post Date
+        ]
+        
+        composite_keys: [
+          Post_ID,
+          OnlineStatement_ID,
+          Channel,
+          Post Date
+        ]
+
+combined_data:
+  overall_lower_bound:
+    year: 2015
+    month: 1
+    day: 1
